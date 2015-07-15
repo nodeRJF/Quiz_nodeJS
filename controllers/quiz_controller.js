@@ -55,11 +55,24 @@ exports.load=function(req, res, next, quizId){
 
 
 exports.index=function(req, res){
-  models.Quiz.findAll().then(function(quizes){
-  console.log("Quizes controles INDEX"+quizes);
-    res.render('quizes/index.ejs',{quizes: quizes});
+  console.log("search:" + req.query.search);
+  if(req.query.search === undefined){
+    models.Quiz.findAll().then(function(quizes){
+    console.log("Quizes controles INDEX"+quizes);
+      res.render('quizes/index.ejs',{quizes: quizes});
+    }
+    ).catch(function(error){next (error);});
+  }else{
+    var search = '%'+req.query.search.replace(/ /g, '%')+'%'
+    console.log("query.search search:" + search);
+    models.Quiz.findAll({where: ["pregunta like ?", search]}).then(function(quizes){
+    console.log("Quizes controles INDEX"+quizes);
+      res.render('quizes/index.ejs',{quizes: quizes});
+    }
+    ).catch(function(error){next (error);});
   }
-).catch(function(error){next (error);});
+
+
 };
 
 
