@@ -90,3 +90,20 @@ exports.answer=function(req, res){
     }
     res.render('quizes/answer',{quiz:res.quiz, respuesta:resultado});
 };
+
+
+  exports.new=function(req, res){
+    var quiz = models.Quiz.build(
+      //crea objeto Quiz
+      {pregunta:"Pregunta",respuesta:"Respuesta"}
+    );
+    res.render('quizes/new',{quiz:quiz});
+  };
+
+  exports.create=function(req, res){
+      var quiz = models.Quiz.build(req.body.quiz);
+      //guarda en BBDD la nueva quiz
+      quiz.save({fields: ["pregunta", "respuesta"]}).then(function(){
+        res.redirect('/quizes');
+      })
+  };
