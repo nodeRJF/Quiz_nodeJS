@@ -93,7 +93,6 @@ exports.answer=function(req, res){
 
 
   exports.new=function(req, res){
-    console.log("VVVVVVVVVVVV_new1");
     var quiz = models.Quiz.build(
       //crea objeto Quiz
       {pregunta:"Pregunta",respuesta:"Respuesta"}
@@ -102,7 +101,6 @@ exports.answer=function(req, res){
   };
 
   exports.create=function(req, res){
-    console.log("VVVVVVVVVVVV_0");
       var quiz = models.Quiz.build(req.body.quiz);
 
       quiz.validate()
@@ -112,6 +110,33 @@ exports.answer=function(req, res){
              }else{
                //guarda en BBDD la nueva quiz
                quiz.save({fields: ["pregunta", "respuesta"]}).then(function(){
+                 res.redirect('/quizes');
+               })
+             }
+         }
+       );
+//res.redirect('/quizes');
+  };
+
+
+  exports.edit=function(req, res){
+      var quiz = res.quiz;
+      console.log(":::::"+ quiz);
+      res.render('quizes/edit',{quiz:quiz, errors: []});
+  };
+
+
+  exports.update=function(req, res){
+      res.quiz.pregunta = req.body.quiz.pregunta;
+      res.quiz.respuesta = req.body.quiz.respuesta;
+
+      res.quiz.validate()
+         .then(function(err){
+             if(err){
+                res.render('quizes/edit',{quiz: req.quiz, errors:err.errors});
+             }else{
+               //guarda en BBDD la nueva quiz
+               res.quiz.save({fields: ["pregunta", "respuesta"]}).then(function(){
                  res.redirect('/quizes');
                })
              }
