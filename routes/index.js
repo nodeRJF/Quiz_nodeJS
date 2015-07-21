@@ -15,11 +15,15 @@ router.get('/quizes',                         quizController.index);
 router.get('/quizes/:quizId(\\d+)',           quizController.show);
 router.get('/quizes/:quizId(\\d+)/answer',    quizController.answer);
 router.get('/quizes/new',                         quizController.new);
-router.post('/quizes/create',                      quizController.create);
+router.post('/quizes/create',                         quizController.create);
+router.post('/quizes/create',           function(req, res){
+  console.log("roueter CREATE_____");
+             quizController.create;
+           });
 
 router.get('/author', function(req, res) {
   console.log("enroutador get AUTHOR");
-  res.render('author');
+  res.render('author',{errors: []});
 });
 
 
@@ -27,7 +31,7 @@ router.get('/author', function(req, res) {
 
 router.get('/', function(req, res) {
   console.log("enroutador get INDEX");
-  res.render('index', { title: 'Quiz' });
+  res.render('index', { title: 'Quiz', errors: [] });
 });
 
 

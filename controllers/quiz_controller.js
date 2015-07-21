@@ -1,4 +1,4 @@
-
+var models =  require('../models/models.js');
 /*
 exports.question=function(req, res) {
   console.log("enroutador get QUESTION");
@@ -17,7 +17,7 @@ exports.answer=function(req, res) {
 };
 */
 
-var models =  require('../models/models.js');
+
 /*
 exports.question=function(req, res){
   models.Quiz.findAll().success(function(quiz){
@@ -59,7 +59,7 @@ exports.index=function(req, res){
   if(req.query.search === undefined){
     models.Quiz.findAll().then(function(quizes){
     console.log("Quizes controles INDEX"+quizes);
-      res.render('quizes/index.ejs',{quizes: quizes});
+      res.render('quizes/index.ejs',{quizes: quizes, errors: []});
     }
     ).catch(function(error){next (error);});
   }else{
@@ -67,7 +67,7 @@ exports.index=function(req, res){
     console.log("query.search search:" + search);
     models.Quiz.findAll({where: ["pregunta like ?", search]}).then(function(quizes){
     console.log("Quizes controles INDEX"+quizes);
-      res.render('quizes/index.ejs',{quizes: quizes});
+      res.render('quizes/index.ejs',{quizes: quizes, errors: []});
     }
     ).catch(function(error){next (error);});
   }
@@ -79,7 +79,7 @@ exports.index=function(req, res){
 //GET /quizes/:id
 exports.show=function(req, res){
   console.log("respuesta:"+res.quiz);
-  res.render('quizes/show',{quiz:res.quiz});
+  res.render('quizes/show',{quiz:res.quiz, errors: []});
 };
 
 
@@ -88,22 +88,34 @@ exports.answer=function(req, res){
     if(req.query.respuesta === res.quiz.respuesta ){
       var resultado ="Correcto";
     }
-    res.render('quizes/answer',{quiz:res.quiz, respuesta:resultado});
+    res.render('quizes/answer',{quiz:res.quiz, respuesta:resultado, errors: []});
 };
 
 
   exports.new=function(req, res){
+    console.log("VVVVVVVVVVVV_new1");
     var quiz = models.Quiz.build(
       //crea objeto Quiz
       {pregunta:"Pregunta",respuesta:"Respuesta"}
     );
-    res.render('quizes/new',{quiz:quiz});
+    res.render('quizes/new',{quiz:quiz, errors: []});
   };
 
   exports.create=function(req, res){
+    console.log("VVVVVVVVVVVV_0");
       var quiz = models.Quiz.build(req.body.quiz);
-      //guarda en BBDD la nueva quiz
-      quiz.save({fields: ["pregunta", "respuesta"]}).then(function(){
-        res.redirect('/quizes');
-      })
+
+      quiz.validate()
+         .then(function(err){
+             if(err){
+                res.render('quizes/new',{quiz:quiz, errors:err.errors});
+             }else{
+               //guarda en BBDD la nueva quiz
+               quiz.save({fields: ["pregunta", "respuesta"]}).then(function(){
+                 res.redirect('/quizes');
+               })
+             }
+         }
+       );
+//res.redirect('/quizes');
   };
