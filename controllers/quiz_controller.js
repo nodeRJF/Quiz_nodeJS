@@ -144,3 +144,9 @@ exports.answer=function(req, res){
        );
 //res.redirect('/quizes');
   };
+
+  exports.destroy=function(req, res){
+      res.quiz.destroy().then(function(){
+        res.redirect('/quizes');
+      }).catch(function(error){next (error);});
+  };
