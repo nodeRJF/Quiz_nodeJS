@@ -39,10 +39,12 @@ sequelize.sync().then(function(){
   Quiz.count().success(function(count){
     if(count === 0){
       Quiz.create({pregunta: 'Capital de Italia',
-                   respuesta: 'Roma'
+                   respuesta: 'Roma',
+                   tema: 'ocio'
                  });
      Quiz.create({pregunta: 'Capital de Portugal',
-                  respuesta: 'Lisboa'
+                  respuesta: 'Lisboa',
+                  tema: 'ocio'
                 })
       .then(function(){console.log('BBDD inicializada.');});
     };

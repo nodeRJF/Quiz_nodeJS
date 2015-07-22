@@ -95,21 +95,21 @@ exports.answer=function(req, res){
   exports.new=function(req, res){
     var quiz = models.Quiz.build(
       //crea objeto Quiz
-      {pregunta:"Pregunta",respuesta:"Respuesta"}
+      {pregunta:"Pregunta",respuesta:"Respuesta", tema:"otro"}
     );
     res.render('quizes/new',{quiz:quiz, errors: []});
   };
 
   exports.create=function(req, res){
       var quiz = models.Quiz.build(req.body.quiz);
-
+console.log("create::tema:" + req.body.quiz.tema);
       quiz.validate()
          .then(function(err){
              if(err){
                 res.render('quizes/new',{quiz:quiz, errors:err.errors});
              }else{
                //guarda en BBDD la nueva quiz
-               quiz.save({fields: ["pregunta", "respuesta"]}).then(function(){
+               quiz.save({fields: ["pregunta", "respuesta", "tema"]}).then(function(){
                  res.redirect('/quizes');
                })
              }
@@ -129,14 +129,15 @@ exports.answer=function(req, res){
   exports.update=function(req, res){
       res.quiz.pregunta = req.body.quiz.pregunta;
       res.quiz.respuesta = req.body.quiz.respuesta;
-
+      res.quiz.tema = req.body.quiz.tema;
+console.log("update::tema:" + req.body.quiz.tema);
       res.quiz.validate()
          .then(function(err){
              if(err){
                 res.render('quizes/edit',{quiz: req.quiz, errors:err.errors});
              }else{
                //guarda en BBDD la nueva quiz
-               res.quiz.save({fields: ["pregunta", "respuesta"]}).then(function(){
+               res.quiz.save({fields: ["pregunta", "respuesta", "tema"]}).then(function(){
                  res.redirect('/quizes');
                })
              }
