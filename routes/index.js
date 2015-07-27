@@ -10,8 +10,9 @@ console.log("enroutador get quizes");
 //router.get('/quizes/question', quizController.question);
 //router.get('/quizes/answer', quizController.answer);
 
-//Autoload
-router.param('quizId', quizController.load)
+//Autolad datos de BBDD
+router.param('quizId', quizController.load);
+router.param('commentId', commentController.load);
 
 //DEfinicion de rutas de sesion
 router.get('/login',                      sessionController.new);
@@ -27,8 +28,9 @@ router.get('/quizes/:quizId(\\d+)/edit',          sessionController.loginRequire
 router.put('/quizes/:quizId(\\d+)',               sessionController.loginRequired, quizController.update);
 router.delete('/quizes/:quizId(\\d+)',            sessionController.loginRequired, quizController.destroy);
 
-router.get('/quizes/:quizId(\\d+)/comments/new',       commentController.new);
-router.post('/quizes/:quizId(\\d+)/comments',          commentController.create);
+router.get('/quizes/:quizId(\\d+)/comments/new',                                commentController.new);
+router.post('/quizes/:quizId(\\d+)/comments',                                   commentController.create);
+router.get('/quizes/:quizId(\\d+)/comments/:commentId(\\d+)/publish',          sessionController.loginRequired, commentController.publish);
 
 /*router.post('/quizes/create',           function(req, res){
   console.log("roueter CREATE_____");
