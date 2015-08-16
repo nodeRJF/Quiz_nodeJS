@@ -29,8 +29,34 @@ app.use(partials());
 app.use(methodOverride('_method'));
 app.use(session());
 
+app.use(function(req, res, next) {
+    var ahora = new Date();
+    var desconectar = false;
+
+    console.log("_________Fecha sesion:" + req.session.fechaNavegacion  );
+    if(req.session.fechaNavegacion){
+    //  console.log("Fecha sesion--:" + (ahora.getTime() - req.session.fechaNavegacion.getTime()) );
+      console.log("Fecha sesion--:" +ahora +"___"+ ahora.getTime()  );
+      console.log("Fecha sesion--:" + req.session.fechaNavegacion );
+      //Se guardan los datos
+      if((ahora.getTime() - req.session.fechaNavegacion) > 120000 ){
+          console.log("Fecha sesion--:han pasado 120000." );
+          desconectar = true;
+      }
+    }
+
+    req.session.fechaNavegacion = ahora.getTime();
+    if(desconectar){
+      console.log("REDIRECT LLLLLLLLLLLLLogout");
+      delete req.session.user;
+    }
+      next();
+
+});
+
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
+  console.log("SSSSSSS sesion...."  );
     if(!req.path.match(/\/login|\/logout/)){
         req.session.redir = req.path;
     }
